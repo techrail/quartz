@@ -19,28 +19,31 @@ One of he ways to run the resulting script would be something like this:
 ```
 CURR_UID=$(id -u)
 CURR_GID=$(id -g)
-QZ_SOURCE=/data/dockerize/www.techrail.in/input/site 
-QZ_DESTINATION=/data/dockerize/www.techrail.in/output 
+# Remember to set the values below according to your needs
+QZ_SOURCE=/data/dockter/techrail.in/input/site 
+QZ_DESTINATION=/data/dockter/techrail.in/output 
 
 docker run -it \
   --mount "type=bind,target=/source,source=$QZ_SOURCE" \
   --mount "type=bind,target=/destination,source=$QZ_DESTINATION" \
-  techrail/quartz:v4.2.3 \
+  techrail/quartz:v4.4.0 \
   /bin/bash /usr/src/app/build_site.sh $CURR_UID $CURR_GID
 ```
 
 ## How to build a new version of this image
 
+**IMPORTANT**: To build a new version of the docker image, you need to have the [original repo of quartz](https://github.com/jackyzha0/quartz) cloned on top of project root (the `quartz` directory should be at the same level as the `Dockerfile`).
+
 To build a new version of the image, take the following steps: 
 
-1. Go to the `quartz` directory inside this folder: `cd quartz`. THis folder contains the source code for the project. 
+1. Go to the `quartz` directory inside this folder: `cd quartz`. This folder contains the source code for the project. 
 2. Reset the git status: `git reset --hard`
 3. Checkout master (this will bring you into a normal state): `git checkout master`
 4. Fetch from origin: `git fetch origin`
-5. Now switch to the tag you want to build the docker image against (assuming the tag you want to switch to is `v4.3.3`): `git checkout v4.3.3`
+5. Now switch to the tag you want to build the docker image against (assuming the tag you want to switch to is `v4.4.3`): `git checkout v4.4.3`
 6. Now copy the script from this directory into the `quartz` directory. Assuming you are already inside the quartz directory, run: `cp ../build_site.sh .`
 7. Make sure that the script is executable: `chmod +x ./build_site.sh`
-8. Now build the image: `docker build -t techrail/quartz:v4.3.3 .` (or if you want to do a multiplatform build and push it: `docker buildx build --platform linux/amd64,linux/arm64 -t techrail/quartz:v4.3.3 --push .`)
+8. Now build the image: `docker build -t techrail/quartz:v4.4.3 .` (or if you want to do a multiplatform build and push it: `docker buildx build --platform linux/amd64,linux/arm64 -t techrail/quartz:v4.4.3 --push .`)
 
 That should give you an image that can be used to build the image which can then be used to build the sites that we need.
 
