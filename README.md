@@ -1,6 +1,6 @@
-# How to use these files
+# How to use
 
-These file are there to help generate an image based on the awesome Jacky Zhao's [Quartz](https://github.com/jackyzha0/quartz) repository. The target image is supposed to be a portable Docker image (to be built for ARM64 and AMD64 platforms against Linux only) which contains a script to build a site. The image expects the paths `/source` and `/destination` to be mounted and runs the script against these paths.
+These file are there to help generate an image based on the awesome Jacky Zhao's [Quartz](https://github.com/jackyzha0/quartz) repository. The images are [available on Docker Hub](https://hub.docker.com/r/techrail/quartz). The target image is supposed to be a portable Docker image (to be built for ARM64 and AMD64 platforms against Linux only) which contains a script to build a site. The image expects the paths `/source` and `/destination` to be mounted and runs the script against these paths.
 
 **NOTE**: Please check the _How to build a new version of this image_ section below to understand how to build a new version of the image.
 
@@ -14,7 +14,7 @@ The expectations and behavior of the `build_site.sh` are as follows:
 4. The output will be generated in the `/destination/html` directory. 
 5. The `uid` and `gid` to which the resulting files should belong must also have been sent to the script. Once the generation of the files is done, the file ownership is changed using the `chown` command with the given `uid` and `gid`. 
 
-One of he ways to run the resulting script would be something like this: 
+To run the resulting container to generate a site locally would be like this: 
 
 ```
 CURR_UID=$(id -u)
@@ -30,8 +30,10 @@ docker run -it \
   /bin/bash /usr/src/app/build_site.sh $CURR_UID $CURR_GID
 ```
 
-## How to build a new version of this image
+## Using this thing with GitLab CI system
+I use this image with GitLab CI to keep both [techrail.in](https://techrail.in) and [my personal site](https://vaibhavkaushal.com) updated! The pipeline is just a single step. You can check out the script I use in the `.gitlab-ci.yml` file in the project root. In case you have questions, you can open an issue here or ask me on [Techrail Discord server](https://discord.gg/aKkWFghPrV).
 
+## How to build a new version of this image
 **IMPORTANT**: To build a new version of the docker image, you need to have the [original repo of quartz](https://github.com/jackyzha0/quartz) cloned on top of project root (the `quartz` directory should be at the same level as the `Dockerfile`).
 
 To build a new version of the image, take the following steps: 

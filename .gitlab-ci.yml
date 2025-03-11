@@ -1,0 +1,34 @@
+stages:
+  - build_and_deploy
+
+variables:
+  UID: 1000 # Change this according to your needs
+  GID: 1000 # Change this according to your needs as well
+
+build_and_deploy_site:
+  stage: build_and_deploy
+  image: techrail/quartz:v4.4.0
+  script:
+    - echo "Making the source and the destination"
+    - mkdir -p /source /destination 
+    - echo "CI_PROJECT_DIR is $CI_PROJECT_DIR \n Listing directory"
+    - echo "-- STEP 1 -- removing everything in /source"
+    - rm -rf /source/*
+    - echo "-- STEP 2 -- Showing everything in project directory"
+    - ls -alh $CI_PROJECT_DIR
+    - echo "Copying everything to /source"
+    - cp -rv $CI_PROJECT_DIR/* /source
+    - echo "Going to the source directory"
+    - cd /source
+    - echo "Listing in /source"
+    - ls -alh /source
+    - echo "Checking out sources and building quartz site..."
+    - /bin/bash /usr/src/app/build_site.sh $UID $GID
+    - |
+      if [ $? -ne 0 ]; then
+        echo "Something went wrong it seems"
+        exit 1
+      fi
+    - echo "Check the site. It should have been updated with the latest changes"
+  only:
+    - master # Run this CI pipeline only when the commit was in master branch
